@@ -1,38 +1,24 @@
-export type Customer = {
-  id: string;
-  name: string;
-  email: string;
-  address: string;
-  tel: string;
-};
+import { type DefaultSession } from "next-auth";
+declare module "next-auth" {
+  /**
+   * The shape of the user object returned in the OAuth providers' `profile` callback,
+   * or the second parameter of the `session` callback, when using a database.
+   */
+  //interface User {}
+  /**
+   * The shape of the account object returned in the OAuth providers' `account` callback,
+   * Usually contains information about the provider being used, like OAuth tokens (`access_token`, etc).
+   */
+  //interface Account {}
 
-export interface NavItem {
-  title: string;
-  href?: string;
-  disabled?: boolean;
-  external?: boolean;
+  /**
+   * Returned by `useSession`, `auth`, contains information about the active session.
+   */
+  interface Session {
+    user: {
+      id: string;
+      role: string;
+      image: string | null;
+    } & DefaultSession["user"];
+  }
 }
-
-type Prettify<T> = {
-  [K in keyof T]: T[K];
-} & {};
-
-type ReadonlyType<T> = {
-  readonly [P in keyof T]: T[K];
-};
-
-type Nullable<T> = { [K in keyof T]: T[K] } | null;
-
-//other utilty type
-type PartialCustomer = Partial<Customer>;
-type ReadonlyCustomer = Readonly<Customer>;
-type NameAndEmail = Pick<Customer, 'name' | 'email'>;
-type WithoutEmail = Omit<Customer, 'email'>;
-
-type Shape =
-  | { kind: 'circle'; radius: number }
-  | { kind: 'square'; sideLength: number }
-  | { kind: 'triangle'; sideLength: number }
-  | { kind: 'rectangle'; width: number; height: number };
-
-type Circle = Exclude<Shape, 'square' | 'triangle', 'rectangle'>;

@@ -1,62 +1,63 @@
 {
-    "compilerOptions": {
-        "paths": {
-            "@/*": [
-                "./src/*"
-            ]
-        },
-        "lib": [
-            "dom",
-            "dom.iterable",
-            "esnext"
-        ],
-        "allowJs": true,
-        "skipLibCheck": true,
-        "strict": false,
-        "noEmit": true,
-        "incremental": true,
-        "module": "esnext",
-        "esModuleInterop": true,
-        "moduleResolution": "node",
-        "resolveJsonModule": true,
-        "isolatedModules": true,
-        "jsx": "preserve",
-        "plugins": [
-            {
-                "name": "next"
-            }
-        ]
+  "compilerOptions": {
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ]
     },
-    "include": [
-        "next-env.d.ts",
-        ".next/types/**/*.ts",
-        "**/*.ts",
-        "**/*.tsx",
-        "src/app/api/auth/[...nextauth]/auth.js",
-        "src/app/api/auth/[...nextauth]/route.js",
-        "src/app/api/auth/[...nextauth]/auth.config.js",
-        "src/middleware.js",
-        "src/lib/utils.js",
-        "src/lib/schemas.js",
-        "src/lib/models.js",
-        "src/lib/fonts.js",
-        "src/lib/db.js",
-        "src/lib/data.js",
-        "src/lib/clientPromise.js",
-        "src/lib/actions.js",
-        "src/app/(auth)/register/register-form.jsx",
-        "src/app/(auth)/register/page.jsx",
-        "src/app/(auth)/login/page.jsx",
-        "src/app/(auth)/login/login-form.jsx",
-        "src/components/modal.jsx",
-        "src/app/dash/users/update/page.jsx",
-        "src/app/dash/users/update/layout.jsx",
-        "src/app/dash/users/update/edit-user-form.jsx",
-        "src/app/dash/users/@modal/default.jsx",
-        "src/app/dash/users/@modal/(.)update/page.jsx",
-        "src/components/submit-button.tsx",
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
     ],
-    "exclude": [
-        "node_modules"
-    ]
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "noEmit": true,
+    "incremental": true,
+    "module": "esnext",
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "target": "ES2017"
+  },
+  "include": [
+    "next-env.d.ts",
+    ".next/types/**/*.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "src/app/api/auth/[...nextauth]/auth.js",
+    "src/app/api/auth/[...nextauth]/route.js",
+    "src/app/api/auth/[...nextauth]/auth.config.js",
+    "src/middleware.js",
+    "src/lib/utils.js",
+    "src/lib/schemas.js",
+    "src/lib/models.js",
+    "src/lib/fonts.js",
+    "src/lib/db.js",
+    "src/lib/data.js",
+    "src/lib/clientPromise.js",
+    "src/lib/actions.js",
+    "src/app/(auth)/register/register-form.jsx",
+    "src/app/(auth)/register/page.jsx",
+    "src/app/(auth)/login/page.jsx",
+    "src/app/(auth)/login/login-form.jsx",
+    "src/components/modal.jsx",
+    "src/app/dashboard/users/update/page.jsx",
+    "src/app/dashboard/users/update/layout.jsx",
+    "src/app/dashboard/users/update/edit-user-form.jsx",
+    "src/app/dashboard/users/@modal/default.jsx",
+    "src/app/dashboard/users/@modal/(.)update/page.jsx",
+    "src/components/submit-button.tsx"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }

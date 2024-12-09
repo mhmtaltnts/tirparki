@@ -1,17 +1,20 @@
-'use server';
-import { z } from 'zod';
-import bcrypt from 'bcryptjs';
-import { revalidatePath } from 'next/cache';
-import { redirect } from 'next/navigation';
-import { createSafeActionClient } from 'next-safe-action';
-import { flattenValidationErrors } from 'next-safe-action';
+"use server";
+import { z } from "zod";
+import bcrypt from "bcryptjs";
+import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
+import { createSafeActionClient } from "next-safe-action";
+import { flattenValidationErrors } from "next-safe-action";
 
-import { UpdateUserSchema } from '@/lib/schemas/user-schemas';
-import prisma from '@/lib/prisma';
+import {
+  UpdateUserSchema,
+  UpdateProfileSchema,
+} from "@/lib/schemas/user-schemas";
+import prisma from "@/lib/prisma";
 
 const actionClient = createSafeActionClient({
-  handleReturnedServerError(e) {
-    return 'Oh no, something went wrong!';
+  handleServerError(e) {
+    return "Oh no, something went wrong!";
   },
 });
 
@@ -41,42 +44,93 @@ const actionClient = createSafeActionClient({
 
 export async function updateUser(
   prevState: { userId: string; role: string; message: string; error: string },
-  formData: FormData
+  formData: FormData,
 ) {
-  const role = formData.get('role') as string;
+  const role = formData.get("role") as
+    | "USER"
+    | "ADMIN"
+    | "MANAGER"
+    | "EMPLOYEE"
+    | "OFFICIAL";
   const userId = prevState.userId;
   const validatedFields = UpdateUserSchema.safeParse({
-    role: formData.get('role'),
+    role: formData.get("role"),
   });
 
   if (!validatedFields.success) {
     return {
-      error: 'Kullanıcı değiştirilemedi, Şema hatası',
+      error: "Kullanıcı değiştirilemedi, Şema hatası",
     };
   }
 
   try {
     await prisma.user.update({ where: { id: userId }, data: { role } });
 
-    revalidatePath('dash/users');
-    return { userId, role, message: 'Kullanıcı değiştirildi...', error: '' };
+    revalidatePath("dashboard/users");
+    return { userId, role, message: "Kullanıcı değiştirildi...", error: "" };
   } catch (error) {
     console.log(error);
-    return { error: 'Kullanıcı değiştirilemedi' };
+    return { error: "Kullanıcı değiştirilemedi" };
+  }
+}
+type UpdateMeType = {
+  userId: string;
+  email: string;
+  message: string;
+  error: string;
+};
+
+export async function updateProfile(
+  prevState: UpdateMeType,
+  formData: FormData,
+): Promise<UpdateMeType> {
+  const userId = prevState.userId;
+  const email = prevState.email;
+  const validatedFields = UpdateProfileSchema.safeParse({
+    name: formData.get("name"),
+    address: formData.get("address"),
+    phone: formData.get("phone"),
+  });
+
+  if (!validatedFields.success) {
+    return {
+      userId,
+      email,
+      error: "Kullanıcı değiştirilemedi, Şema hatası",
+      message: "",
+    };
+  }
+
+  try {
+    await prisma.user.update({
+      where: { id: userId },
+      data: { ...validatedFields.data },
+    });
+
+    revalidatePath("dashboard/users");
+    return {
+      userId,
+      email,
+      message: "Kullanıcı bilgileriniz güncellendi.",
+      error: "",
+    };
+  } catch (error) {
+    console.log(error);
+    return { userId, email, error: "Kullanıcı değiştirilemedi", message: "" };
   }
 }
 
 export async function deleteUser(
   prevState: { userId: string; error: string },
-  formData: FormData
+  formData: FormData,
 ) {
-  const userId = formData.get('userId') as string;
+  const userId = formData.get("userId") as string;
   try {
     await prisma.user.delete({ where: { id: userId } });
-    revalidatePath('dash/users');
-    return { userId, error: '' };
+    revalidatePath("dashboard/users");
+    return { userId, error: "" };
   } catch (error) {
     console.log(error);
-    return { error: 'Kullanıcı silinemedi' };
+    return { error: "Kullanıcı silinemedi" };
   }
 }

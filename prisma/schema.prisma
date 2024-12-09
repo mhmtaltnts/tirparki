@@ -27,95 +27,127 @@ enum Status {
   PAID
 }
 
+model Account {
+  id                String  @id @default(cuid())
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  userId            String
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+//model Session {
+//  id           String   @id @default(cuid())
+//  sessionToken String   @unique
+//  userId       String
+//  expires      DateTime
+//  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+//}
+
 model User {
-  id        String     @id @unique @default(cuid())
-  name      String     @db.VarChar(255)
-  email     String     @unique @db.VarChar(255)
-  password  String?    @db.VarChar(255)
-  role      String     @default("USER")
-  image     String?
-  entries   Entry[]
-  invoices  Invoice[]
-  exits     Exit[]
-  customs   Customs[]
-  customers Customer[]
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
+  id            String    @id @unique @default(cuid())
+  name          String?   @db.VarChar(255)
+  email         String    @unique @db.VarChar(255)
+  emailVerified DateTime?
+  password      String?   @db.VarChar(255)
+  role          Role      @default(USER)
+  image         String?
+  address       String?
+  phone         String?
+  records       Entry[]   @relation("recorder")
+  entries       Entry[]   @relation("customer")
+  invoices      Invoice[]
+  exits         Exit[]
+  customs       Customs[]
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  accounts      Account[]
+  //sessions      Session[]
 
   @@index([email])
 }
 
+model VerificationToken {
+  id         String   @id @default(cuid())
+  identifier String?
+  email      String?
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
 model Entry {
-  id         String    @id @default(cuid())
-  trailer    String    @db.VarChar(100)
-  truck      String    @db.VarChar(100)
-  cargo      String    @db.VarChar(255)
-  customer   Customer? @relation(fields: [customerId], references: [id])
-  customerId String?   @db.VarChar(255)
+  id         String   @id @default(cuid())
+  trailer    String   @db.VarChar(100)
+  truck      String   @db.VarChar(100)
+  cargo      String?  @db.VarChar(255)
+  customer   User?    @relation("customer", fields: [customerId], references: [id])
+  customerId String?  @db.VarChar(255)
   invoice    Invoice?
   customs    Customs?
   exit       Exit?
-  user       User      @relation(fields: [userId], references: [id])
-  userId     String
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
+  recorder   User     @relation("recorder", fields: [recorderId], references: [id])
+  recorderId String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 
-  @@index([userId])
   @@index([customerId])
 }
 
 model Exit {
-  id        String   @id @default(cuid())
-  entryId   String   @unique
-  entry     Entry    @relation(fields: [entryId], references: [id], onUpdate: Cascade, onDelete: Cascade)
-  userId    String
-  user      User     @relation(fields: [userId], references: [id])
-  truck     String   @db.VarChar(100)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id         String   @id @default(cuid())
+  entryId    String   @unique
+  entry      Entry    @relation(fields: [entryId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  recorderId String
+  recorder   User     @relation(fields: [recorderId], references: [id])
+  truck      String   @db.VarChar(100)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 
   @@index([entryId])
 }
 
 model Customs {
-  id        String   @id @default(cuid())
-  entryId   String   @unique
-  entry     Entry    @relation(fields: [entryId], references: [id], onUpdate: Cascade, onDelete: Cascade)
-  userId    String
-  user      User     @relation(fields: [userId], references: [id])
-  desc      String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id          String   @id @default(cuid())
+  entryId     String   @unique
+  entry       Entry    @relation(fields: [entryId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  registrarId String
+  registrar   User     @relation(fields: [registrarId], references: [id])
+  desc        String   @default(" ")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   @@index([entryId])
+}
+
+model ParkingRate {
+  id        String   @id @default(cuid())
+  rate      Float
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Invoice {
-  id        String   @id @default(cuid())
-  entryId   String   @unique
-  entry     Entry?   @relation(fields: [entryId], references: [id], onUpdate: Cascade, onDelete: Cascade)
-  user      User     @relation(fields: [userId], references: [id])
-  userId    String
-  amount    Int
-  status    String   @default("PENDING")
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id          String   @id @default(cuid())
+  entryId     String   @unique
+  entry       Entry?   @relation(fields: [entryId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  registrar   User     @relation(fields: [registrarId], references: [id])
+  registrarId String
+  amount      Int
+  status      Status   @default(PENDING)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
-  @@index([userId])
+  @@index([registrarId])
   @@index([entryId])
-}
-
-model Customer {
-  id        String   @id @default(cuid())
-  name      String   @unique
-  email     String?  @unique
-  address   String?
-  tel       String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  user      User     @relation(fields: [userId], references: [id])
-  userId    String
-  entries   Entry[]
-
-  @@index([userId])
 }

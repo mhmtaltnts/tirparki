@@ -1,4 +1,4 @@
-import { custom, z } from 'zod';
+import { custom, z } from "zod";
 
 export const CreateEntrySchema = z.object({
   trailer: z.string().toUpperCase(),
@@ -6,8 +6,6 @@ export const CreateEntrySchema = z.object({
   customerId: z.string().optional(),
   cargo: z.string().optional(),
   userId: z.string(),
-  amount: z.coerce.number().optional(),
-  status: z.string().optional(),
 });
 
 export const UpdateEntrySchema = z.object({

@@ -1,24 +1,24 @@
-'use server';
-import { z } from 'zod';
+"use server";
+import { z } from "zod";
 
-import { AuthError } from 'next-auth';
-import { revalidatePath } from 'next/cache';
-import { redirect } from 'next/navigation';
-import { createSafeActionClient } from 'next-safe-action';
-import { flattenValidationErrors } from 'next-safe-action';
+import { AuthError } from "next-auth";
+import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
+import { createSafeActionClient } from "next-safe-action";
+import { flattenValidationErrors } from "next-safe-action";
 
-import { CreateNoteSchema, ExitParkSchema, CustomNoteSchema } from './schemas';
-import prisma from './prisma';
+import { CreateNoteSchema, ExitParkSchema, CustomNoteSchema } from "./schemas";
+import prisma from "./prisma";
 
-const BASE_URL = 'http://localhost:3000';
+const BASE_URL = "http://localhost:3000";
 
-const actionClient = createSafeActionClient({
+/*const actionClient = createSafeActionClient({
   handleReturnedServerError(e) {
     return 'Oh no, something went wrong!';
   },
 });
 
-/* export const register = actionClient
+ export const register = actionClient
   .schema(CreateUserSchema, {
     handleValidationErrorsShape: (ve) =>
       flattenValidationErrors(ve).fieldErrors,

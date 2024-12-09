@@ -1,5 +1,5 @@
-'use server';
-import prisma from '../prisma';
+"use server";
+import prisma from "../prisma";
 export const getEntry = async (id: string) => {
   try {
     const entry = await prisma.entry.findUnique({
@@ -9,7 +9,7 @@ export const getEntry = async (id: string) => {
     return entry;
   } catch (err) {
     console.log(err);
-    throw new Error('Failed to fetch note!');
+    throw new Error("Failed to fetch note!");
   }
 };
 
@@ -38,13 +38,18 @@ export const getInPark = async () => {
       },
     });
     if (!entryWithoutExit?.length) {
-      return { message: 'Parkta Araç Yoktur. Araç Girişi Yapabilirsiniz' };
+      return { message: "Parkta Araç Yoktur. Araç Girişi Yapabilirsiniz" };
     }
     return entryWithoutExit;
   } catch (err) {
     console.log(err);
-    throw new Error('Veriye ulaşılamadı!');
+    throw new Error("Veriye ulaşılamadı!");
   }
 };
 
+type Prettify<T> = {
+  [K in keyof T]: T[K];
+} & {};
+
 export type ParkEntryType = Awaited<ReturnType<typeof getInPark>>;
+export type EntryType = Awaited<ReturnType<typeof getEntry>>

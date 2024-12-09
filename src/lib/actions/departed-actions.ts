@@ -45,12 +45,12 @@ export const updateEntry = actionClient
             truck,
             customerId,
             cargo,
-            userId,
+            recorderId: userId,
             invoice: {
               update: {
                 amount,
                 status,
-                userId,
+                registrarId: userId,
               },
             },
           },

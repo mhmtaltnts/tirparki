@@ -1,37 +1,37 @@
-'use client';
+"use client";
 
-import MainLink from './mainLink';
-import { Menu } from 'lucide-react';
-import { siteConfig } from '@/config/site';
+import MainLink from "./mainLink";
+import { Menu } from "lucide-react";
+import { siteConfig } from "@/config/site";
 import {
   Sheet,
   SheetContent,
   SheetDescription,
   SheetTitle,
   SheetTrigger,
-} from '../ui/sheet';
+} from "../ui/sheet";
 
 const privateNav = [
   {
-    title: 'Panel',
-    href: '/dash',
-    roles: ['MANAGER', 'EMPLOYEE', 'OFFICIAL'],
+    title: "Panel",
+    href: "/dashboard",
+    roles: ["MANAGER", "ADMIN"],
   },
   {
-    title: 'Park',
-    href: '/park',
-    roles: ['MANAGER', 'EMPLOYEE', 'OFFICIAL', 'USER'],
+    title: "Park",
+    href: "/park",
+    roles: ["MANAGER", "EMPLOYEE", "OFFICIAL", "USER", "ADMIN"],
   },
   {
-    title: 'Park Girişi',
-    href: '/entry',
-    roles: ['MANAGER', 'EMPLOYEE', 'OFFICIAL'],
+    title: "Park Girişi",
+    href: "/entry",
+    roles: ["MANAGER", "EMPLOYEE", "OFFICIAL", "ADMIN"],
   },
 ];
 export default function MainNav({ user }) {
   return (
     <>
-      <div className="hidden md:flex items-center justify-between gap-6">
+      <div className="hidden items-center justify-between gap-6 md:flex">
         {siteConfig.mainNav.map((link) => (
           <MainLink item={link} key={link.title} />
         ))}
@@ -42,12 +42,12 @@ export default function MainNav({ user }) {
                 key={link.title}
                 item={{ title: link.title, href: link.href }}
               />
-            )
+            ),
         )}
       </div>
       <Sheet>
         <SheetTrigger asChild>
-          <Menu className="h-6 md:hidden w-6" />
+          <Menu className="h-6 w-6 md:hidden" />
         </SheetTrigger>
 
         <SheetContent>
@@ -67,7 +67,7 @@ export default function MainNav({ user }) {
                     key={link.title}
                     item={{ title: link.title, href: link.href }}
                   />
-                )
+                ),
             )}
           </div>
         </SheetContent>

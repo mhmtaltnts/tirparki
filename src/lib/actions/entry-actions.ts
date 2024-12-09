@@ -1,22 +1,23 @@
-'use server';
+"use server";
 
-import { revalidatePath } from 'next/cache';
-import { redirect } from 'next/navigation';
-import { createSafeActionClient } from 'next-safe-action';
-import { flattenValidationErrors } from 'next-safe-action';
+import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
+import { createSafeActionClient } from "next-safe-action";
+import { flattenValidationErrors } from "next-safe-action";
+import { Status } from "@prisma/client";
 
 import {
   CreateEntrySchema,
   UpdateEntrySchema,
   DeleteEntrySchema,
-} from '@/lib/schemas/entry-schemas';
-import prisma from '@/lib/prisma';
+} from "@/lib/schemas/entry-schemas";
+import prisma from "@/lib/prisma";
 
-const BASE_URL = 'http://localhost:3000';
+const BASE_URL = "http://localhost:3000";
 
 const actionClient = createSafeActionClient({
-  handleReturnedServerError(e) {
-    return 'Oh no, something went wrong!';
+  handleServerError(e) {
+    return "Oh no, something went wrong!";
   },
 });
 
@@ -26,17 +27,7 @@ export const createEntry = actionClient
       flattenValidationErrors(ve).fieldErrors,
   })
   .action(
-    async ({
-      parsedInput: {
-        userId,
-        trailer,
-        truck,
-        customerId,
-        cargo,
-        amount,
-        status,
-      },
-    }) => {
+    async ({ parsedInput: { userId, trailer, truck, customerId, cargo } }) => {
       try {
         const entryCreated = await prisma.entry.create({
           data: {
@@ -44,26 +35,19 @@ export const createEntry = actionClient
             truck,
             customerId: customerId || null,
             cargo,
-            userId,
-            invoice: {
-              create: {
-                amount,
-                status,
-                userId,
-              },
-            },
+            recorderId: userId,
           },
         });
 
-        revalidatePath('/entry');
-        redirect('/entry');
+        revalidatePath("/dashboard/entry");
+        redirect("/dashboard/entry");
       } catch (error) {
         console.error(error);
 
         throw error;
         //return { error: 'Çıkış yapılamadı' };
       }
-    }
+    },
   );
 
 export const updateEntry = actionClient
@@ -93,13 +77,13 @@ export const updateEntry = actionClient
             truck,
             customerId: customerId || null,
             cargo,
-            userId,
+            recorderId: userId,
             customs: {
               update: {
                 where: { entryId: id },
                 data: {
                   desc,
-                  userId,
+                  registrarId: userId,
                 },
               },
             },
@@ -108,23 +92,23 @@ export const updateEntry = actionClient
                 where: { entryId: id },
                 data: {
                   amount,
-                  status,
-                  userId,
+                  status: status as Status,
+                  registrarId: userId,
                 },
               },
             },
           },
         });
 
-        revalidatePath('entry');
+        revalidatePath("entry");
       } catch (error) {
         console.error(error);
 
         throw error;
         //return { error: 'Çıkış yapılamadı' };
       }
-      redirect('/entry');
-    }
+      redirect("/entry");
+    },
   );
 
 export const deleteEntry = actionClient
@@ -138,12 +122,12 @@ export const deleteEntry = actionClient
         where: { id },
       });
 
-      revalidatePath('entry');
+      revalidatePath("entry");
     } catch (error) {
       console.error(error);
 
       throw error;
       //return { error: 'Çıkış yapılamadı' };
     }
-    return { message: 'Park Girişi Yapıldı ! 🎉' };
+    return { message: "Park Girişi Yapıldı ! 🎉" };
   });

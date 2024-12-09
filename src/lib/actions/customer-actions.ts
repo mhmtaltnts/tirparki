@@ -1,41 +1,37 @@
-'use server';
+"use server";
 
-import { revalidatePath } from 'next/cache';
-import { redirect } from 'next/navigation';
-import { createSafeActionClient } from 'next-safe-action';
-import { flattenValidationErrors } from 'next-safe-action';
-import {
-  CreateCustomerSchema,
-  CreateCustomerType,
-} from '../schemas/customer-schema';
-import prisma from '../prisma';
-import { capitalizeFirstLetter } from '../utils';
+import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
+import { createSafeActionClient } from "next-safe-action";
+import { flattenValidationErrors } from "next-safe-action";
+import { CreateUserSchema, CreateCustomerType } from "../schemas/user-schemas";
+import prisma from "../prisma";
+import { capitalizeFirstLetter } from "../utils";
 
 const actionClient = createSafeActionClient({
-  handleReturnedServerError(e) {
-    return 'Oh no, something went wrong!';
+  handleServerError(e) {
+    return "Oh no, something went wrong!";
   },
 });
 
 export const createCustomer = actionClient
-  .schema(CreateCustomerSchema, {
+  .schema(CreateUserSchema, {
     handleValidationErrorsShape: (ve) =>
       flattenValidationErrors(ve).fieldErrors,
   })
-  .action(async ({ parsedInput: { userId, name, email, tel, address } }) => {
+  .action(async ({ parsedInput: { name, email, phone, address } }) => {
     try {
-      const customerToEdit = await prisma.customer.create({
+      const customerToEdit = await prisma.user.create({
         data: {
           name: capitalizeFirstLetter(name),
           email,
-          tel,
+          phone,
           address,
-          userId,
         },
       });
 
-      revalidatePath('/dash/customers');
-      redirect('/dash/customers');
+      revalidatePath("/dashboard/customers");
+      redirect("/dashboard/customers");
     } catch (error) {
       console.error(error);
 
@@ -44,25 +40,24 @@ export const createCustomer = actionClient
   });
 
 export const updateCustomer = actionClient
-  .schema(CreateCustomerSchema, {
+  .schema(CreateUserSchema, {
     handleValidationErrorsShape: (ve) =>
       flattenValidationErrors(ve).fieldErrors,
   })
-  .action(async ({ parsedInput: { userId, name, email, tel, address } }) => {
+  .action(async ({ parsedInput: { userId, name, email, phone, address } }) => {
     try {
-      const userToEdit = await prisma.customer.update({
-        where: { name },
+      const userToEdit = await prisma.user.update({
+        where: { email },
         data: {
           name: capitalizeFirstLetter(name),
           email,
-          tel,
+          phone,
           address,
-          userId,
         },
       });
 
-      revalidatePath('/dash/customers');
-      redirect('/dash/customers');
+      revalidatePath("/dashboard/customers");
+      redirect("/dash/customers");
     } catch (error) {
       console.error(error);
 
@@ -72,18 +67,18 @@ export const updateCustomer = actionClient
   });
 
 export const deleteCustomer = actionClient
-  .schema(CreateCustomerSchema, {
+  .schema(CreateUserSchema, {
     handleValidationErrorsShape: (ve) =>
       flattenValidationErrors(ve).fieldErrors,
   })
-  .action(async ({ parsedInput: { name } }) => {
+  .action(async ({ parsedInput: { email } }) => {
     try {
-      await prisma.customer.delete({
-        where: { name },
+      await prisma.user.delete({
+        where: { email },
       });
 
-      revalidatePath('/dash/customers');
-      redirect('/dash/customers');
+      revalidatePath("/dashboard/customers");
+      redirect("/dashboard/customers");
     } catch (error) {
       console.error(error);
 

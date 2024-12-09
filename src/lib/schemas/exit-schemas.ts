@@ -1,7 +1,9 @@
-import { z } from 'zod';
+import { z } from "zod";
 
 export const CreateExitSchema = z.object({
   truck: z.string(),
+  amount: z.coerce.number(),
+  status: z.enum(["PAID", "PENDING"]),
 });
 
 export const UpdateExitSchema = z.object({

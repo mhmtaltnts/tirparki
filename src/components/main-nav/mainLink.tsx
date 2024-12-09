@@ -1,22 +1,27 @@
-'use client';
+"use client";
 
-import { cn } from '@/lib/utils';
-import Link from 'next/link';
+import { cn } from "@/lib/utils";
+import Link from "next/link";
 
-import { usePathname } from 'next/navigation';
+import { usePathname } from "next/navigation";
 
-const MainLink = ({ item }) => {
+type ItemType = {
+  title: string;
+  href: string;
+};
+
+const MainLink = ({ item }: { item: ItemType }) => {
   const pathName = usePathname();
 
   return (
     <Link
       href={item.href}
       className={cn(
-        'flex items-center text-sm font-medium text-muted-foreground',
+        "flex items-center text-sm font-medium text-muted-foreground",
         {
-          'underline underline-offset-4 brightness-150 rounded-md p-2':
-            pathName.split('/')[1] === item.href.split('/')[1],
-        }
+          "rounded-md p-2 underline underline-offset-4 brightness-150":
+            pathName.split("/")[1] === item.href.split("/")[1],
+        },
       )}
     >
       {item.title}

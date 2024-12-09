@@ -1,7 +1,7 @@
-import prisma from '../prisma';
+import prisma from "../prisma";
 export const getOutOfPark = async () => {
   try {
-    const entryWithexit = await prisma.entry.findMany({
+    const entryWithExit = await prisma.entry.findMany({
       where: {
         exit: {
           isNot: null,
@@ -36,17 +36,17 @@ export const getOutOfPark = async () => {
       },
     });
 
-    if (entryWithexit?.length === 0) {
-      return { message: 'Parktan çıkışı yapılan araç yoktur. ' };
+    if (entryWithExit?.length === 0) {
+      return { message: "Parktan çıkışı yapılan araç yoktur. " };
     }
 
-    return entryWithexit;
+    return entryWithExit;
   } catch (error) {
     console.log(error);
-    throw new Error('Failed to fetch notes!');
+    throw new Error("Failed to fetch notes!");
   }
 };
 
-type entryWithexit = Awaited<ReturnType<typeof getOutOfPark>>;
+type entryWithExit = Awaited<ReturnType<typeof getOutOfPark>>;
 
-export type departedT = Exclude<entryWithexit, { message: string }>;
+export type departedT = Exclude<entryWithExit, { message: string }>;

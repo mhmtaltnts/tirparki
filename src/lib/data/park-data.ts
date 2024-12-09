@@ -1,4 +1,4 @@
-import prisma from '../prisma';
+import prisma from "../prisma";
 
 export const getInPark = async () => {
   try {
@@ -7,19 +7,32 @@ export const getInPark = async () => {
         exit: null,
       },
       include: {
-        customer: true,
-        customs: true,
-        invoice: true,
+        customer: {
+          select: {
+            name: true,
+          },
+        },
+        customs: {
+          select: {
+            desc: true,
+          },
+        },
+        invoice: {
+          select: {
+            status: true,
+          },
+        },
       },
     });
-    if (!entryWithoutExit?.length) {
-      return { message: 'Parkta Araç Yoktur. Araç Girişi Yapabilirsiniz' };
+    console.log(entryWithoutExit);
+
+    if (entryWithoutExit?.length === 0) {
+      return { message: "Parkta Araç Yoktur. Araç Girişi Yapabilirsiniz" };
     }
     return entryWithoutExit;
   } catch (err) {
     console.log(err);
-    throw new Error('Failed to fetch notes!');
+    throw new Error("Failed to fetch data!");
   }
 };
-
 export type ParkEntryType = Awaited<ReturnType<typeof getInPark>>;

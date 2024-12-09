@@ -1,34 +1,29 @@
-import LoginForm from './login-form';
-import { handleGoogleLogin } from '@/lib/actions/auth-actions';
-import { FcGoogle } from 'react-icons/fc';
-import { Button } from '@/components/ui/button';
+import LoginForm from "./login-form";
 
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { EmailSignInForm } from "./login-with-email-form";
+
+import LoginWithGoogleForm from "./login-with-google-form";
 
 const LoginPage = async () => {
   return (
-    <main className="flex justify-center items-center min-h-screen w-full">
-      <Card className="w-full max-w-md mx-auto">
-        <CardHeader className="space-y-2">
-          <form
-            action={handleGoogleLogin}
-            className="flex items-center justify-center"
-          >
-            <Button
-              variant="outline"
-              type="submit"
-              className="flex items-center justify-center gap-3"
-            >
-              <FcGoogle size={30} />
-              <span>Giriş Yapınız</span>
-            </Button>
-          </form>
-        </CardHeader>
-
-        <CardContent>
+    <main className="mt-5 flex min-h-screen w-full flex-col items-center justify-start">
+      <Tabs defaultValue="google-login " className="max-w-[500px]">
+        <TabsList className="grid w-full grid-cols-3">
+          <TabsTrigger value="google-login">Google ile giriş</TabsTrigger>
+          <TabsTrigger value="email-login">E-posta ile giriş</TabsTrigger>
+          <TabsTrigger value="credential-login">Şifre ile giriş</TabsTrigger>
+        </TabsList>
+        <TabsContent value="google-login" className="h-[400px]">
+          <LoginWithGoogleForm />
+        </TabsContent>
+        <TabsContent value="email-login" className="h-[400px]">
+          <EmailSignInForm />
+        </TabsContent>
+        <TabsContent value="credential-login" className="h-[400px]">
           <LoginForm />
-        </CardContent>
-      </Card>
+        </TabsContent>
+      </Tabs>
     </main>
   );
 };

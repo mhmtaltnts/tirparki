@@ -1,10 +1,9 @@
-import { custom, z } from 'zod';
+import { custom, z } from "zod";
 
-export const ParkTrailerSchema = z.object({
+export const ParkPublicSchema = z.object({
   trailer: z.string().toUpperCase(),
   truck: z.string().toUpperCase(),
   customer: z.string(),
-  userId: z.string(),
   createdAt: z.date(),
 });
 
@@ -19,5 +18,5 @@ export const ParkEntrySchema = z.object({
   createdAt: z.date(),
 });
 
-export type ParkTrailerType = z.infer<typeof ParkTrailerSchema>;
+export type ParkPublicType = z.infer<typeof ParkPublicSchema>;
 export type ParkEntryType = z.infer<typeof ParkEntrySchema>;
