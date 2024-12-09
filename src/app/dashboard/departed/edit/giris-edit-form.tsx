@@ -1,4 +1,4 @@
-'use client';
+/* 'use client';
 import { updateentry } from '@/lib/actions/entry-actions';
 import { FaSave } from 'react-icons/fa';
 import {
@@ -111,3 +111,4 @@ export default function entryEditForm({ user, entry }) {
     </Card>
   );
 }
+ */
