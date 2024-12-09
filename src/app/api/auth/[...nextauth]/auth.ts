@@ -1,10 +1,10 @@
 import NextAuth from "next-auth";
 import NodemailerProvider from "next-auth/providers/nodemailer";
+import Google from "next-auth/providers/google";
 import { sendVerificationRequest } from "@/lib/authSendRequest";
 import prisma from "@/lib/prisma";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
-import { authConfig } from "./auth.config";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 
 const login = async (credentials: Partial<Record<string, unknown>>) => {
@@ -40,7 +40,11 @@ export const {
 } = NextAuth({
   adapter: PrismaAdapter(prisma),
   providers: [
-    ...authConfig.providers,
+    Google({
+      clientId: process.env.GOOGLE_ID,
+      clientSecret: process.env.GOOGLE_SECRET,
+      allowDangerousEmailAccountLinking: true,
+    }),
     NodemailerProvider({
       server: {
         host: process.env.SMTP_HOST,
@@ -80,7 +84,14 @@ export const {
   },
 
   callbacks: {
-    ...authConfig.callbacks,
+    async session({ session, token }) {
+      if (token) {
+        session.user.id = token.id as string;
+        session.user.role = token.role as string;
+        session.user.image = token.img as string | null;
+      }
+      return session;
+    },
 
     async jwt({ token }) {
       if (token?.email) {
