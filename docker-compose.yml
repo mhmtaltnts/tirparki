@@ -1,14 +1,32 @@
-version: '3'
 services:
-  mongo:
-    image: mongo:latest
-    container_name: mongo
-    env_file:
-      - ./.env
-    volumes:
-      - mongo:/data/db
+  web:
+    build: .
     ports:
-      - '6000:27017'
+      - '3000:3000'
+    environment:
+      - NODE_ENV=production
+    depends_on:
+      - db
+    networks:
+      - my_network
+
+  db:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - my_network
 
 volumes:
-  mongo:
+  postgres_data:
+
+networks:
+  my_network:
+    name: my_network
+    driver: bridge
