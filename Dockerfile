@@ -11,7 +11,8 @@ FROM base AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
-RUN bunx prisma generate
+RUN bun run db:generate
+RUN bun run db:push
 RUN bun run build
 
 # Stage 3: Production server

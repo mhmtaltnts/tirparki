@@ -1,6 +1,6 @@
 import NextAuth from "next-auth";
 import NodemailerProvider from "next-auth/providers/nodemailer";
-import Google from "next-auth/providers/google";
+
 import { sendVerificationRequest } from "@/lib/authSendRequest";
 import prisma from "@/lib/prisma";
 import CredentialsProvider from "next-auth/providers/credentials";
@@ -41,11 +41,7 @@ export const {
 } = NextAuth({
   adapter: PrismaAdapter(prisma),
   providers: [
-    Google({
-      clientId: process.env.GOOGLE_ID,
-      clientSecret: process.env.GOOGLE_SECRET,
-      allowDangerousEmailAccountLinking: true,
-    }),
+    ...authConfig.providers,
     NodemailerProvider({
       server: {
         host: process.env.SMTP_HOST,
@@ -85,7 +81,11 @@ export const {
   },
 
   callbacks: {
-    ...authConfig.callbacks,
+    authorized({ request, auth }) {
+      const { pathname } = request.nextUrl;
+      if (pathname === "/dashboard") return !!auth;
+      return true;
+    },
     async session({ session, token }) {
       if (token) {
         session.user.id = token.id as string;
@@ -95,18 +95,9 @@ export const {
       return session;
     },
 
-    async jwt({ token }) {
-      if (token?.email) {
-        const foundUser = await prisma.user.findUnique({
-          where: {
-            email: token.email,
-          },
-        });
-        if (foundUser) {
-          token.id = foundUser.id;
-          token.role = foundUser.role;
-          token.img = foundUser.image;
-        }
+    async jwt({ token, user }) {
+      if (user) {
+        return { ...token, role: user.role, id: user.id, img: user.image };
       }
       return token;
     },
