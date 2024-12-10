@@ -22,6 +22,12 @@ services:
       - postgres_data:/var/lib/postgresql/data
     networks:
       - my_network
+cron:
+    image: alpine/curl    
+    depends_on:
+      - web
+    networks:
+      - my_network
 
 volumes:
   postgres_data:
