@@ -11,7 +11,6 @@ FROM base AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
-RUN bun run db:generate
 RUN bun run build
 
 # Stage 3: Production server
@@ -22,5 +21,6 @@ COPY --from=builder /app/public ./public
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
 
+RUN bun run db:generate
 EXPOSE 3000
 CMD ["bun", "run", "server.js"]
