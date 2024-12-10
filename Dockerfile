@@ -1,27 +1,26 @@
-FROM oven/bun:alpine AS base
+# Use Node.js as the base image
+FROM node:18
 
-# Stage 1: Install dependencies
-FROM base AS deps
+# Set the working directory inside the container
 WORKDIR /app
-COPY package.json bun.lockb ./
-RUN bun install --frozen-lockfile
 
-# Stage 2: Build the application
-FROM base AS builder
-WORKDIR /app
-COPY --from=deps /app/node_modules ./node_modules
+# Copy package.json and package-lock.json files
+COPY package*.json ./
+
+# Install dependencies
+RUN npm install
+
+# Copy the rest of the application code
 COPY . .
-RUN bunx prisma generate
-RUN bun run build
 
-# Stage 3: Production server
-FROM base AS runner
-WORKDIR /app
-ENV NODE_ENV=production
-COPY --from=builder /app/public ./public
-COPY --from=builder /app/.next/standalone ./
-COPY --from=builder /app/.next/static ./.next/static
+# Generate Database
+RUN npx prisma migrate dev --name init
 
-RUN bun run db:generate
+# Build the Next.js application
+RUN npm run build
+
+# Expose the port the app runs on
 EXPOSE 3000
-CMD ["bun", "run", "server.js"]
+
+# Start the Next.js application
+CMD ["npm", "start"]
