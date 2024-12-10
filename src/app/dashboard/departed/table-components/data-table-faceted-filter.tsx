@@ -1,9 +1,10 @@
-import * as React from 'react';
-import { CheckIcon, PlusCircledIcon } from '@radix-ui/react-icons';
+import * as React from "react";
+import { Column } from "@tanstack/react-table";
+import { CheckIcon, PlusCircledIcon } from "@radix-ui/react-icons";
 
-import { cn } from '@/lib/utils';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
+import { cn } from "@/lib/utils";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   Command,
   CommandEmpty,
@@ -12,17 +13,31 @@ import {
   CommandItem,
   CommandList,
   CommandSeparator,
-} from '@/components/ui/command';
+} from "@/components/ui/command";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from '@/components/ui/popover';
-import { Separator } from '@/components/ui/separator';
+} from "@/components/ui/popover";
+import { Separator } from "@/components/ui/separator";
 
-export function DataTableFacetedFilter({ column, title, options }) {
+interface DataTableFacetedFilterProps<TData, TValue> {
+  column?: Column<TData, TValue>;
+  title?: string;
+  options: {
+    label: string;
+    value: string;
+    icon?: React.ComponentType<{ className?: string }>;
+  }[];
+}
+
+export function DataTableFacetedFilter<TData, TValue>({
+  column,
+  title,
+  options,
+}: DataTableFacetedFilterProps<TData, TValue>) {
   const facets = column?.getFacetedUniqueValues();
-  const selectedValues = new Set(column?.getFilterValue());
+  const selectedValues = new Set(column?.getFilterValue() as string[]);
 
   return (
     <Popover>
@@ -35,7 +50,7 @@ export function DataTableFacetedFilter({ column, title, options }) {
               <Separator orientation="vertical" className="mx-2 h-4" />
               <Badge
                 variant="secondary"
-                className="rounded-sm px-1 font-norcargo lg:hidden"
+                className="font-norcargo rounded-sm px-1 lg:hidden"
               >
                 {selectedValues.size}
               </Badge>
@@ -43,7 +58,7 @@ export function DataTableFacetedFilter({ column, title, options }) {
                 {selectedValues.size > 2 ? (
                   <Badge
                     variant="secondary"
-                    className="rounded-sm px-1 font-norcargo"
+                    className="font-norcargo rounded-sm px-1"
                   >
                     {selectedValues.size} seçildi
                   </Badge>
@@ -54,7 +69,7 @@ export function DataTableFacetedFilter({ column, title, options }) {
                       <Badge
                         variant="secondary"
                         key={option.value}
-                        className="rounded-sm px-1 font-norcargo"
+                        className="font-norcargo rounded-sm px-1"
                       >
                         {option.label}
                       </Badge>
@@ -84,19 +99,19 @@ export function DataTableFacetedFilter({ column, title, options }) {
                       }
                       const filterValues = Array.from(selectedValues);
                       column?.setFilterValue(
-                        filterValues.length ? filterValues : undefined
+                        filterValues.length ? filterValues : undefined,
                       );
                     }}
                   >
                     <div
                       className={cn(
-                        'mr-2 flex h-4 w-4 items-center justify-center rounded-sm border border-primary',
+                        "mr-2 flex h-4 w-4 items-center justify-center rounded-sm border border-primary",
                         isSelected
-                          ? 'bg-primary text-primary-foreground'
-                          : 'opacity-50 [&_svg]:invisible'
+                          ? "bg-primary text-primary-foreground"
+                          : "opacity-50 [&_svg]:invisible",
                       )}
                     >
-                      <CheckIcon className={cn('h-4 w-4')} />
+                      <CheckIcon className={cn("h-4 w-4")} />
                     </div>
                     {option.icon && (
                       <option.icon className="mr-2 h-4 w-4 text-muted-foreground" />

@@ -9,9 +9,13 @@ import {
 } from "@/components/page-header";
 import { getEntry } from "@/lib/data/entry-data";
 
-export default async function CustomPage({ searchParams }) {
+export default async function CustomPage({
+  searchParams,
+}: {
+  searchParams: { [key: string]: string | string[] | undefined };
+}) {
   const id = searchParams?.id;
-  const entry = await getEntry(id);
+  const entry = await getEntry(id as string);
   const session = await auth();
 
   return (
@@ -22,7 +26,7 @@ export default async function CustomPage({ searchParams }) {
           Bu sayfadan aracın gümrük girişini yapabilirsiniz.
         </PageHeaderDescription>
       </PageHeader>
-      <CreateCustomsForm userId={session?.user.id} entry={entry} />{" "}
+      <CreateCustomsForm userId={session?.user.id as string} entry={entry} />{" "}
     </main>
   );
 }

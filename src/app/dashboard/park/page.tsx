@@ -5,11 +5,17 @@ import Mybreadcrub from "@/components/my-breadcrub";
 
 export default async function ParkPage() {
   const data = await getInPark();
-  console.log(data);
-
-  return (
-    <main className="mx-auto flex h-full flex-col py-10 md:px-6">
-      <DataTable data={data} columns={columns} />
-    </main>
-  );
+  if (Array.isArray(data) && data.length !== 0) {
+    return (
+      <main className="flex min-h-screen p-2">
+        <DataTable data={data} columns={columns} />
+      </main>
+    );
+  } else {
+    return (
+      <main className="flex min-h-screen p-2">
+        <p className="text-center text-2xl font-bold">Departed List is Empty</p>
+      </main>
+    );
+  }
 }

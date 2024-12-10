@@ -1,9 +1,15 @@
 "use client";
-
+import { Table } from "@tanstack/react-table";
 import { Input } from "@/components/ui/input";
 import { DataTableViewOptions } from "./data-table-view-options";
 
-export function DataTableToolbar({ table }) {
+interface DataTableToolbarProps<TData> {
+  table: Table<TData>;
+}
+
+export function DataTableToolbar<TData>({
+  table,
+}: DataTableToolbarProps<TData>) {
   //const isFiltered = table.getState().columnFilters.length > 0;
 
   return (

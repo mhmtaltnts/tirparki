@@ -1,22 +1,20 @@
-'use client';
-import { Checkbox } from '@/components/ui/checkbox';
-import { DataTableColumnHeader } from '@/components/data-table-column-header';
+"use client";
+import { Checkbox } from "@/components/ui/checkbox";
+import { DataTableColumnHeader } from "@/components/data-table-column-header";
 
-import { statuses } from './data';
-import { createColumnHelper } from '@tanstack/react-table';
-import type { departedT } from '@/lib/data/departed-data';
-import { formatDateToLocal } from '@/lib/utils';
+import { statuses } from "./data";
+import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
+import { formatDateToLocal } from "@/lib/utils";
+import { type DepartedSchemaT } from "@/lib/schemas/departed-schemas";
 
-const columnHelper = createColumnHelper<departedT>();
-
-export const columns = [
+export const columns: ColumnDef<DepartedSchemaT>[] = [
   {
-    id: 'select',
+    id: "select",
     header: ({ table }) => (
       <Checkbox
         checked={
           table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && 'indeterminate')
+          (table.getIsSomePageRowsSelected() && "indeterminate")
         }
         onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
         aria-label="Select all"
@@ -31,38 +29,40 @@ export const columns = [
         className="translate-y-[2px]"
       />
     ),
-    meta: 'hidden sm:inline-block',
+    meta: "hidden sm:inline-block",
     enableSorting: false,
     enableHiding: false,
   },
 
   {
-    accessorKey: 'trailer',
+    accessorKey: "trailer",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="DORSE" />
     ),
   },
-  columnHelper.accessor('truck', {
-    id: 'Getiren',
+  {
+    accessorKey: "truck",
+    id: "Getiren",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="GETİREN" />
     ),
-    meta: 'hidden md:table-cell',
-  }),
+    meta: "hidden md:table-cell",
+  },
 
-  columnHelper.accessor('exit.truck', {
-    id: 'Götüren',
+  {
+    accessorKey: "exit.truck",
+    id: "Götüren",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="GÖTÜREN" />
     ),
-  }),
+  },
   {
-    accessorKey: 'customer.name',
-    id: 'customer',
+    accessorKey: "customer.name",
+    id: "customer",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="FİRMA" />
     ),
-    meta: 'hidden sm:table-cell',
+    meta: "hidden sm:table-cell",
   },
   /* columnHelper.accessor('customs.desc', {
     id: 'Gümrük',
@@ -71,15 +71,16 @@ export const columns = [
       <DataTableColumnHeader column={column} title="GÜMRÜK" />
     ),
   }), */
-  columnHelper?.accessor('customs.desc', {
-    id: 'Gümrük',
+  {
+    accessorKey: "customs.desc",
+    id: "Gümrük",
 
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="GÜMRÜK" />
     ),
-    meta: 'hidden md:table-cell',
-    cell: ({ row }) => <div className="w-[80px]">{row.getValue('Gümrük')}</div>,
-  }),
+    meta: "hidden md:table-cell",
+    cell: ({ row }) => <div className="w-[80px]">{row.getValue("Gümrük")}</div>,
+  },
   /* columnHelper.accessor('invoice.status', {
     id: 'Ödeme statusu',
     header: ({ column }) => (
@@ -87,15 +88,16 @@ export const columns = [
     ),
   }), */
 
-  columnHelper.accessor('invoice.status', {
-    id: 'Ödeme statusu',
+  {
+    accessorKey: "invoice.status",
+    id: "Ödeme Durumu",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="ÖDEME statusU" />
     ),
-    meta: 'hidden sm:table-cell',
+    meta: "hidden sm:table-cell",
     cell: ({ row }) => {
       const status = statuses.find(
-        (status) => status.value === row.getValue('Ödeme statusu')
+        (status) => status.value === row.getValue("Ödeme statusu"),
       );
 
       if (!status) {
@@ -114,38 +116,40 @@ export const columns = [
     filterFn: (row, id, value) => {
       return value.includes(row.getValue(id));
     },
-  }),
+  },
 
-  columnHelper.accessor('createdAt', {
-    id: 'Giriş Tarihi',
+  {
+    accessorKey: "createdAt",
+    id: "Giriş Tarihi",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="GİRİŞ TARİHİ" />
     ),
 
     cell: ({ row }) => {
-      let dateStr = row.getValue('Giriş Tarihi') as string;
+      let dateStr = row.getValue("Giriş Tarihi") as string;
       //let istanbulOffset = 3 * 60;
       return (
-        <span className="text-left font-scargol">
-          {formatDateToLocal(dateStr, 'tr-TR')}
+        <span className="font-scargol text-left">
+          {formatDateToLocal(dateStr, "tr-TR")}
         </span>
       );
     },
-  }),
-  columnHelper.accessor('exit.createdAt', {
-    id: 'Çıkış Tarihi',
+  },
+  {
+    accessorKey: "exit.createdAt",
+    id: "Çıkış Tarihi",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="ÇIKIŞ TARİHİ" />
     ),
-    meta: 'hidden sm:table-cell',
+    meta: "hidden sm:table-cell",
     cell: ({ row }) => {
-      let dateStr = row.getValue('Çıkış Tarihi') as string;
+      let dateStr = row.getValue("Çıkış Tarihi") as string;
 
       return (
-        <span className="text-left font-scargol">
-          {formatDateToLocal(dateStr, 'tr-TR')}
+        <span className="font-scargol text-left">
+          {formatDateToLocal(dateStr, "tr-TR")}
         </span>
       );
     },
-  }),
+  },
 ];

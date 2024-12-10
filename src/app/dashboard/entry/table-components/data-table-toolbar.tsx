@@ -1,15 +1,21 @@
-'use client';
+"use client";
 
-import { Cross2Icon } from '@radix-ui/react-icons';
+import { Cross2Icon } from "@radix-ui/react-icons";
 
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { DataTableViewOptions } from './data-table-view-options';
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { DataTableViewOptions } from "./data-table-view-options";
 
-import { statuses } from './data';
-import { DataTableFacetedFilter } from './data-table-faceted-filter';
+import { statuses } from "./data";
+import { DataTableFacetedFilter } from "./data-table-faceted-filter";
+import { Table } from "@tanstack/react-table";
+interface DataTableToolbarProps<TData> {
+  table: Table<TData>;
+}
 
-export function DataTableToolbar({ table }) {
+export function DataTableToolbar<TData>({
+  table,
+}: DataTableToolbarProps<TData>) {
   const isFiltered = table.getState().columnFilters.length > 0;
 
   return (
@@ -17,15 +23,15 @@ export function DataTableToolbar({ table }) {
       <div className="flex flex-1 items-center space-x-2">
         <Input
           placeholder="Dorse ara..."
-          value={table.getColumn('Dorse')?.getFilterValue() ?? ''}
+          value={(table.getColumn("Dorse")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
-            table.getColumn('Dorse')?.setFilterValue(event.target.value)
+            table.getColumn("Dorse")?.setFilterValue(event.target.value)
           }
           className="h-8 w-[150px] lg:w-[250px]"
         />
-        {table.getColumn('Ödeme Durumu') && (
+        {table.getColumn("Ödeme Durumu") && (
           <DataTableFacetedFilter
-            column={table.getColumn('Ödeme Durumu')}
+            column={table.getColumn("Ödeme Durumu")}
             title="Ödeme Durumu"
             options={statuses}
           />

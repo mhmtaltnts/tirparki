@@ -24,11 +24,11 @@ export const getInPark = async () => {
         },
       },
     });
-    console.log(entryWithoutExit);
 
     if (entryWithoutExit?.length === 0) {
-      return { message: "Parkta Araç Yoktur. Araç Girişi Yapabilirsiniz" };
+      return { message: "Parktan çıkışı yapılan araç yoktur. " };
     }
+
     return entryWithoutExit;
   } catch (err) {
     console.log(err);
@@ -36,3 +36,4 @@ export const getInPark = async () => {
   }
 };
 export type ParkEntryType = Awaited<ReturnType<typeof getInPark>>;
+export type ParkEntryDataT = Exclude<ParkEntryType, { message: string }>;

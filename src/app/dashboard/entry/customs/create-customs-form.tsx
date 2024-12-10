@@ -9,7 +9,7 @@ import { SubmitButton } from "@/components/submit-button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-export default function CreateCustomsForm({ userId, entry }) {
+export default function CreateCustomsForm({ userId, entry } : { userId: string, entry: any }) {
   const [state, action] = useFormState(createCustoms, {
     userId,
     entryId: entry.id,

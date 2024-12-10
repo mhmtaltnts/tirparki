@@ -5,45 +5,49 @@ import { EntryActionCell } from "./entry-action-cell";
 
 import { createColumnHelper } from "@tanstack/react-table";
 import { ColumnDef } from "@tanstack/react-table";
-import type { ParkEntryType } from "@/lib/data/entry-data";
+import type { ParkEntryT } from "@/lib/schemas/entry-schemas";
 import { formatDateToLocal } from "@/lib/utils";
 
-const columnHelper = createColumnHelper<ParkEntryType>();
-
-export const columns: ColumnDef<ParkEntryType>[] = [
-  columnHelper.accessor("trailer", {
+export const columns: ColumnDef<ParkEntryT>[] = [
+  {
+    accessorKey: "trailer",
     id: "Dorse",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="DORSE" />
     ),
-  }),
+  },
 
-  columnHelper.accessor("truck", {
+  {
+    accessorKey: "truck",
     id: "Çekici",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="ÇEKİCİ" />
     ),
-  }),
-  columnHelper.accessor("customer.name", {
+  },
+  {
+    accessorKey: "customer.name",
     id: "Müşteri",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="FİRMA" />
     ),
-  }),
+  },
 
-  columnHelper.accessor("cargo", {
+  {
+    accessorKey: "cargo",
     id: "Kargo",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="KARGO" />
     ),
-  }),
-  columnHelper.accessor("customs.desc", {
+  },
+  {
+    accessorKey: "customs.desc",
     id: "Gümrük",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="GÜMRÜK" />
     ),
-  }),
-  columnHelper.accessor("invoice.status", {
+  },
+  {
+    accessorKey: "invoice.status",
     id: "Ödeme Durumu",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="ÖDEME DURUMU" />
@@ -59,9 +63,10 @@ export const columns: ColumnDef<ParkEntryType>[] = [
     filterFn: (row, id, value) => {
       return value.includes(row.getValue(id));
     },
-  }),
+  },
 
-  columnHelper.accessor("createdAt", {
+  {
+    accessorKey: "createdAt",
     id: "Giriş Tarihi",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="GİRİŞ TARİHİ" />
@@ -75,10 +80,10 @@ export const columns: ColumnDef<ParkEntryType>[] = [
         </div>
       );
     },
-  }),
+  },
 
-  columnHelper.display({
+  {
     id: "actions",
     cell: (prop) => <EntryActionCell row={prop.row} />,
-  }),
+  },
 ];

@@ -1,3 +1,4 @@
+import { Table } from "@tanstack/react-table";
 import {
   ChevronLeftIcon,
   ChevronRightIcon,
@@ -26,14 +27,20 @@ import {
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
-export function DataTablePagination({ table }) {
+interface DataTablePaginationProps<TData> {
+  table: Table<TData>;
+}
+
+export function DataTablePagination<TData>({
+  table,
+}: DataTablePaginationProps<TData>) {
   const [showDelete, setShowDelete] = useState(false);
   const router = useRouter();
 
   const handleDelete = async () => {
     let data = table
       .getFilteredSelectedRowModel()
-      .rows.map((row) => row.original.id);
+      .rows.map((row) => row.id as string);
     await fetch("/api/departed", {
       method: "DELETE",
       headers: {

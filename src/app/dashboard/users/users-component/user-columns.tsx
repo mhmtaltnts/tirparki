@@ -3,23 +3,10 @@
 import Image from "next/image";
 import { UserEditActionCell } from "./user-action-cell";
 import { roles } from "./data";
-import { createColumnHelper } from "@tanstack/react-table";
+import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
+import { UserDataT } from "@/lib/schemas/user-schemas";
 
-type User =
-  | {
-      id: string;
-      name: string;
-      email: string;
-      password: string | null;
-      role: string;
-      image: string | null;
-      createdAt: Date;
-      updatedAt: Date;
-    }
-  | undefined;
-const columnHelper = createColumnHelper<User>();
-
-export const columns = [
+export const columns: ColumnDef<UserDataT>[] = [
   {
     accessorKey: "name",
     header: "Ad Soyad",
@@ -66,8 +53,8 @@ export const columns = [
     },
   },
 
-  columnHelper.display({
+  {
     id: "actions",
     cell: (props) => <UserEditActionCell row={props.row} />,
-  }),
+  },
 ];

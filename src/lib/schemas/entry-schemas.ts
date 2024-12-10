@@ -23,3 +23,36 @@ export const UpdateEntrySchema = z.object({
 export const DeleteEntrySchema = z.object({
   id: z.string(),
 });
+
+export const ParkEntrySchema = z.object({
+  trailer: z.string().toUpperCase(),
+  truck: z.string().toUpperCase(),
+  cargo: z
+    .string()
+    .optional()
+    .transform((val) => (val === undefined ? null : val)),
+  createdAt: z.date(),
+  customer: z
+    .object({
+      name: z
+        .string()
+        .optional()
+        .transform((val) => (val === undefined ? null : val)),
+    })
+    .optional()
+    .transform((val) => (val === undefined ? null : val)),
+  customs: z
+    .object({
+      desc: z.string(),
+    })
+    .optional()
+    .transform((val) => (val === undefined ? null : val)),
+  invoice: z
+    .object({
+      status: z.enum(["PAID", "PENDING"]),
+    })
+    .optional()
+    .transform((val) => (val === undefined ? null : val)),
+});
+
+export type ParkEntryT = z.infer<typeof ParkEntrySchema>;

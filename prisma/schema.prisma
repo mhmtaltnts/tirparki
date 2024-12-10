@@ -100,6 +100,7 @@ model Entry {
   recorderId String
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
+  exitId     String
 
   @@index([customerId])
 }
@@ -107,7 +108,7 @@ model Entry {
 model Exit {
   id         String   @id @default(cuid())
   entryId    String   @unique
-  entry      Entry    @relation(fields: [entryId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  Entry      Entry    @relation(fields: [entryId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   recorderId String
   recorder   User     @relation(fields: [recorderId], references: [id])
   truck      String   @db.VarChar(100)
@@ -140,7 +141,7 @@ model ParkingRate {
 model Invoice {
   id          String   @id @default(cuid())
   entryId     String   @unique
-  entry       Entry?   @relation(fields: [entryId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  entry       Entry    @relation(fields: [entryId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   registrar   User     @relation(fields: [registrarId], references: [id])
   registrarId String
   amount      Int

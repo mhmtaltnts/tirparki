@@ -27,7 +27,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { UpdateEntrySchema } from '@/lib/schemas/entry-schemas';
 import { useAction } from 'next-safe-action/hooks';
 
-export default function EntryEditForm({ userId, entry, customers }) {
+export default function EntryEditForm({ userId, entry, customers }: { userId: string, entry: any, customers: any }) {
   const router = useRouter();
   const { execute, result, isExecuting } = useAction(updateEntry);
 

@@ -3,18 +3,24 @@ import {
   ChevronRightIcon,
   DoubleArrowLeftIcon,
   DoubleArrowRightIcon,
-} from '@radix-ui/react-icons';
+} from "@radix-ui/react-icons";
 
-import { Button } from '@/components/ui/button';
+import { Button } from "@/components/ui/button";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
+} from "@/components/ui/select";
+import { Table } from "@tanstack/react-table";
+interface DataTablePaginationProps<TData> {
+  table: Table<TData>;
+}
 
-export function DataTablePagination({ table }) {
+export function DataTablePagination<TData>({
+  table,
+}: DataTablePaginationProps<TData>) {
   return (
     <div className="flex items-center justify-between px-2">
       {/* <div className="flex-1 text-sm text-muted-foreground">
@@ -44,9 +50,9 @@ export function DataTablePagination({ table }) {
         <span>satır</span>
       </div>
       <div className="flex w-[fit-content] items-center justify-center text-sm font-medium">
-        {table.getPageCount()} {'adet '} sayfadan{' '}
+        {table.getPageCount()} {"adet "} sayfadan{" "}
         {table.getState().pagination.pageIndex + 1}
-        &apos;{'incisi'}
+        &apos;{"incisi"}
       </div>
       <div className="flex items-center space-x-2">
         <Button

@@ -6,6 +6,7 @@ import prisma from "@/lib/prisma";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 import { PrismaAdapter } from "@auth/prisma-adapter";
+import { authConfig } from "./auth.config";
 
 const login = async (credentials: Partial<Record<string, unknown>>) => {
   if (!credentials.email || !credentials.password)
@@ -84,6 +85,7 @@ export const {
   },
 
   callbacks: {
+    ...authConfig.callbacks,
     async session({ session, token }) {
       if (token) {
         session.user.id = token.id as string;

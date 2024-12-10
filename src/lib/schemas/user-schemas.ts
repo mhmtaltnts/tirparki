@@ -18,4 +18,14 @@ export const CreateUserSchema = z.object({
   userId: z.string(),
 });
 
+export const UserDataSchema = z.object({
+  name: z.string(),
+  email: z.string().email(),
+  phone: z.string(),
+  image: z.string(),
+  role: z.enum(["MANAGER", "EMPLOYEE", "OFFICIAL", "USER", "ADMIN"]),
+  address: z.string(),
+});
+
 export type CreateCustomerType = z.infer<typeof CreateUserSchema>;
+export type UserDataT = z.infer<typeof UserDataSchema>;

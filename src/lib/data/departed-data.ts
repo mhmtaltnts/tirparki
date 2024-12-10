@@ -4,7 +4,7 @@ export const getOutOfPark = async () => {
     const entryWithExit = await prisma.entry.findMany({
       where: {
         exit: {
-          isNot: null,
+          isNot: undefined,
         },
       },
       select: {
@@ -47,6 +47,6 @@ export const getOutOfPark = async () => {
   }
 };
 
-type entryWithExit = Awaited<ReturnType<typeof getOutOfPark>>;
+export type EntryWithExit = Awaited<ReturnType<typeof getOutOfPark>>;
 
-export type departedT = Exclude<entryWithExit, { message: string }>;
+export type DepartedDataT = Exclude<EntryWithExit, { message: string }>;
